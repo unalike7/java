@@ -1,0 +1,53 @@
+import java.io.*;
+import java.util.*;
+
+class Patient implements Serializable {
+    int id;
+    String name;
+    String disease;
+
+    Patient(int id, String name, String disease) {
+        this.id = id;
+        this.name = name;
+        this.disease = disease;
+    }
+
+    @Override
+    public String toString() {
+        return id + " - " + name + " (Disease: " + disease + ")";
+    }
+}
+
+public class HospitalSystem {
+    private static final String FILE = "patients.dat";
+    private static List<Patient> patients = new ArrayList<>();
+
+    public static void addPatient(int id, String name, String disease) {
+        patients.add(new Patient(id, name, disease));
+    }
+
+    public static void saveData() throws IOException {
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE));
+        out.writeObject(patients);
+        out.close();
+    }
+
+    public static void loadData() throws IOException, ClassNotFoundException {
+        File f = new File(FILE);
+        if (f.exists()) {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE));
+            patients = (List<Patient>) in.readObject();
+            in.close();
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        loadData();
+        addPatient(1, "Prajval", "Fever");
+        addPatient(2, "Meena", "Cold");
+
+        saveData();
+        System.out.println("Patient Records:");
+        for (Patient p : patients) System.out.println(p);
+    }
+}
