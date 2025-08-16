@@ -1,0 +1,14 @@
+import java.util.*;
+
+public class SortingSearching {
+    public static void main(String[] args) {
+        int[] arr = {5, 2, 9, 1, 6};
+
+        Arrays.sort(arr); // Sorting
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+
+        int key = 6;
+        int index = Arrays.binarySearch(arr, key); // Searching
+        System.out.println("Element " + key + " found at index: " + index);
+    }
+}
