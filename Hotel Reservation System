@@ -1,0 +1,36 @@
+import java.sql.*;
+import java.util.*;
+
+class HotelReservation {
+    private Connection conn;
+
+    HotelReservation() throws Exception {
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel", "root", "password");
+    }
+
+    public void bookRoom(int roomId, String guest) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(
+            "UPDATE rooms SET booked_by=? WHERE id=? AND booked_by IS NULL");
+        stmt.setString(1, guest);
+        stmt.setInt(2, roomId);
+
+        if (stmt.executeUpdate() > 0) {
+            System.out.println("Room booked successfully!");
+        } else {
+            System.out.println("Room not available!");
+        }
+    }
+
+    public void listAvailableRooms() throws SQLException {
+        ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM rooms WHERE booked_by IS NULL");
+        while (rs.next()) {
+            System.out.println("Room " + rs.getInt("id") + " - Type: " + rs.getString("type"));
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        HotelReservation hotel = new HotelReservation();
+        hotel.listAvailableRooms();
+        hotel.bookRoom(101, "Prajval");
+    }
+}
